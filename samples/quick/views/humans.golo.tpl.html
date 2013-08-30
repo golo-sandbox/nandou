@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= params:title() %></title>
+    </head>
+    <body>
+        <b>:)</b>
+        <hr>
+        <h1><%= params:message() %></h1>
+        <hr>
+        <h3>Fruits</h3>
+        <ul><% foreach human in params:humans() { %>
+            <li>
+                <%= human:firstName() %> <%= human:lastName() %> <%= human:id() %>
+            </li>
+        <% } %></ul>
+
+    </body>
+</html>

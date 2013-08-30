@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <b>Hello WORLD!!!</b>
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/underscore-min.js"></script>
+    <script src="js/backbone-min.js"></script>
+
+    <script>
+    	window.Human = Backbone.Model.extend({
+    		urlRoot:"/humans",
+    		defaults:{
+    			firstName:"JOHN", lastName:"DOE"
+    		}
+    	})
+
+    	window.Humans = Backbone.Collection.extend({
+    		url:"/humans",
+    		models:Human
+    	})
+    </script>
+</body>
+</html>
