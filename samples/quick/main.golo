@@ -1,4 +1,4 @@
-module easy
+module quick
 
 import nandou.Http
 import nandou.File
