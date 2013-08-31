@@ -136,7 +136,6 @@ httpExchange:GET("/humans/:var", |req, res|{
 
 `req:parameters()` returns an array, so you can do : `req:parameters():get(0)` to get the first part of uri. If you use `req:parameter()`, you'll get last parameter.
 
-
 ##Parse json data of a POST request (only json data)
 
 First, you need jQuery : create a `js` dirctory inside `public`, copy `jquery-1.9.1.min.js` to `/public/js/`. Declare it into `index.html` : `<script src="js/jquery-1.9.1.min.js"></script>`. (see `samples/quick/public/js` directory if you want the file).
@@ -181,6 +180,11 @@ You can make `PUT` and `DELETE` requests too :
 httpExchange:PUT("/humans:var", |req, res|{ ... })
 httpExchange:DELETE("/humans:var", |req, res|{ ... })
 ```
+
+##IMPORTANT : `:var` & POST & PUT & DELETE
+
+You can use `:var` keyword with `POST`, `PUT` and `DELETE` requests
+
 
 ##Redirection
 
