@@ -29,7 +29,7 @@ function main = |args| {
 
     # Save data
     println("Scheduling saving ...")
-    # Save project each 60 seconds after previous save
+    # Save project each 20 seconds after previous save
     let scheduler = getScheduler()
 
     scheduler:getScheduleFutureWithFixedDelay(
@@ -37,7 +37,7 @@ function main = |args| {
             try {
                 textToFile(Json.stringify(humans), currentWorkingDirectory() + "/" + "humans.json")
             } catch(e) {
-                println("MemoryCollection:serialize : " + e:toString())
+                println("error : " + e:toString())
             }
         })
         :message(humans)

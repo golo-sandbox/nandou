@@ -259,4 +259,63 @@ println("Current Session id : " + req:session():current("gologolo"):id())
 
 ##Futures
 
-	W.I.P.
+###Simple future : "compute Fibonacci"
+
+It's very easy to write a future with **Nandou**
+
+```coffeescript
+import nandou.Future
+
+function fibonacci = |n| {
+  if n <= 1 {
+    return n
+  } else {
+    return fibonacci(n - 1) + fibonacci(n - 2)
+  }
+}
+
+function main = |args| {
+
+    let executor = getExecutor() # you need an "executor"
+
+    let callableFibonacciComputation = |iterations| {
+      let result = fibonacci(iterations)
+      println(">>> " + result)
+    }
+
+    let future = executor:getFuture(callableFibonacciComputation, 43)
+
+    println("computation in progress ...")
+}
+```
+See `samples/fibonacci/main.golo` for a complete example.
+
+###Scheduled future
+
+This code save the humans list to a json file every 20 seconds (and after 10 seconds the first time) :
+
+```coffeescript
+    var humans = list[]
+
+    # Save data
+    println("Scheduling saving ...")
+    # Save project each 20 seconds after previous save
+    
+    let scheduler = getScheduler() # you need a scheduler (kind of executor)
+
+    scheduler:getScheduleFutureWithFixedDelay(
+        futureArgs():command(|humans| {
+            try {
+                textToFile(Json.stringify(humans), currentWorkingDirectory() + "/" + "humans.json")
+            } catch(e) {
+                println("Error : " + e:toString())
+            }
+        })
+        :message(humans)
+        :initialDelay(10_L) # first run after 10 seconds
+        :delay(20_L)        # then run it each 20 seconds
+    )
+```
+
+
+
