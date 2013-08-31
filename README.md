@@ -199,7 +199,7 @@ httpExchange:GET("/redirect",|req, res|{
 
 First create a `views` dirctory inside `<your web app directory>` with an html file `humans.golo.tpl.html` :
 
-```
+```html
 <!DOCTYPE html>
 <html>
     <head>
