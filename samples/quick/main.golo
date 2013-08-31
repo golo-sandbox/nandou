@@ -104,6 +104,8 @@ function main = |args| {
         
         httpExchange:POST("/humans", |req, res|{
 
+            println("=== SIMPLE POST ====")
+
             let humanMap = Json.parse(req:data()) # it's a map
             humanMap:put("id",java.util.UUID.randomUUID():toString())
 
@@ -116,6 +118,36 @@ function main = |args| {
 
             res:json():send(Json.stringify(humanMap))
         })
+
+        # Backbone sample : === EXPERIMENTS ===
+        # --------------------------------------------------------------
+        # var sam = new Human({firstName:"Sam", lastName:"LePirate"})
+        # sam.urlRoot = sam.urlRoot + "/hello/sam/infos"
+        # sam.save({},{success:function(data){console.log(data)},error:function(err){console.log(err)}})
+
+        httpExchange:POST("/humans/:var", |req, res|{
+
+            let humanMap = Json.parse(req:data()) # it's a map
+            humanMap:put("id",java.util.UUID.randomUUID():toString())
+
+            let humanInst = human()
+                :id(humanMap:get("id"))
+                :firstName(humanMap:get("firstName"))
+                :lastName(humanMap:get("lastName"))
+
+            humans:add(humanInst)
+
+
+            println("+++ VARIABLE POST +++")
+            var query = ""
+            foreach parameter in req:parameters() {
+                println(parameter) 
+                query = query + " : " + parameter   
+            }
+
+            res:json():send(Json.stringify(humanMap))
+        })
+
 
         #------------------------------------
         # Static assets
