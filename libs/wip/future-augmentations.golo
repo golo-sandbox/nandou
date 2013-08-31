@@ -35,25 +35,11 @@ augment java.util.concurrent.Future {
 }
 
 #TimUnit : second
-struct futureArgs = { command, message, initialDelay, delay, period, duration, callback  }
+struct futureArgs = { command, message, initialDelay, delay, period, duration  }
 
 augment java.util.concurrent.ExecutorService {
 	# callable : closure to execute
 	# message : argument passed to callable
-	# callBackWhenSubmitted :
-	#  - called when callable is submitted by ExecutorService
-	#  - message is passed as parameter of callBackWhenSubmitted
-	# callBackWhenDone : passed as 2nd parameter of the callable
-	function getFuture = |this, callable, message, callBackWhenDone, callBackWhenSubmitted| {
-		let worker = (-> callable(message, callBackWhenDone)):to(java.util.concurrent.Callable.class)
-		if callBackWhenSubmitted isnt null { callBackWhenSubmitted(message) }
-		return this:submit(worker) #future is run when submit()
-	}
-
-	function getFuture = |this, callable, message, callBackWhenDone| {
-		let worker = (-> callable(message, callBackWhenDone)):to(java.util.concurrent.Callable.class)
-		return this:submit(worker) #future is run when submit()
-	}
 
 	function getFuture = |this, callable, message| {
 		let worker = (-> callable(message)):to(java.util.concurrent.Callable.class)
@@ -64,19 +50,18 @@ augment java.util.concurrent.ExecutorService {
 		return this:getFuture(
 			  args:command()
 			, args:message()
-			, args:callback()
 		)
 	}
 
 	#http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ScheduledThreadPoolExecutor.html
-	function getScheduledFutureAtFixedRate	= |this, runnable, message, initialDelay, period, duration, callBackWhenDone| {
+	function getScheduledFutureAtFixedRate	= |this, runnable, message, initialDelay, period, duration| {
 
-		let worker = (-> runnable(message, callBackWhenDone)):to(java.lang.Runnable.class)
+		let worker = (-> runnable(message)):to(java.lang.Runnable.class)
 
 		let scheduledFuture = this:scheduleAtFixedRate(worker, initialDelay, period, java.util.concurrent.TimeUnit.SECONDS())
 
 		let scheduledWorker = (-> scheduledFuture:cancel(true)):to(java.util.concurrent.Callable.class)
-		#callback???
+
 		if duration isnt null {
 			this:schedule(scheduledWorker, duration, java.util.concurrent.TimeUnit.SECONDS())
 		}
@@ -85,7 +70,7 @@ augment java.util.concurrent.ExecutorService {
 
 	}
 	#TimUnit : second
-	#struct schedFutureArgs = { command, message, initialDelay, period, duration, callback  }
+	#struct schedFutureArgs = { command, message, initialDelay, period, duration  }
 	function getScheduledFutureAtFixedRate = |this, args| {
 		return this:getScheduledFutureAtFixedRate(
 			  args:command()
@@ -93,18 +78,17 @@ augment java.util.concurrent.ExecutorService {
 			, args:initialDelay()
 			, args:period()
 			, args:duration()
-			, args:callback()
 		)
 	}
 
-	function getScheduleFutureWithFixedDelay	= |this, runnable, message, initialDelay, delay, duration, callBackWhenDone| {
+	function getScheduleFutureWithFixedDelay	= |this, runnable, message, initialDelay, delay, duration| {
 
-		let worker = (-> runnable(message, callBackWhenDone)):to(java.lang.Runnable.class)
+		let worker = (-> runnable(message)):to(java.lang.Runnable.class)
 
 		let scheduledFuture = this:scheduleWithFixedDelay(worker, initialDelay, delay, java.util.concurrent.TimeUnit.SECONDS())
 
 		let scheduledWorker = (-> scheduledFuture:cancel(true)):to(java.util.concurrent.Callable.class)
-		#callback???
+
 		if duration isnt null {
 			this:schedule(scheduledWorker, duration, java.util.concurrent.TimeUnit.SECONDS())
 		}
@@ -121,14 +105,13 @@ augment java.util.concurrent.ExecutorService {
 			, args:initialDelay()
 			, args:delay()
 			, args:duration()
-			, args:callback()
 		)
 	}
 
 
 	#run future at ...
-	function getScheduledFuture	= |this, callable, message, initialDelay, callBackWhenDone| {
-		let worker = (-> callable(message, callBackWhenDone)):to(java.util.concurrent.Callable.class)
+	function getScheduledFuture	= |this, callable, message, initialDelay| {
+		let worker = (-> callable(message)):to(java.util.concurrent.Callable.class)
 		return this:schedule(worker, initialDelay, java.util.concurrent.TimeUnit.SECONDS())
 	}
 	function getScheduledFuture = |this, args| {
@@ -136,7 +119,6 @@ augment java.util.concurrent.ExecutorService {
 			  args:command()
 			, args:message()
 			, args:initialDelay()
-			, args:callback()
 		)
 	}
 
