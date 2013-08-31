@@ -320,7 +320,7 @@ This code save the humans list to a json file every 20 seconds (and after 10 sec
 **Note :** *(to be documented)* there is too :
 
 - `getScheduledFutureAtFixedRate` (with a period)
-- `getScheduledFuture` (on with only an initial delay)
+- `getScheduledFuture` (once with only an initial delay)
 
 
 
