@@ -20,7 +20,16 @@ function main = |args| {
     println("Loading data ...")
     try {
         let jsonHumans = fileToText(currentWorkingDirectory() + "/" + "humans.json", "UTF-8")
-        humans = Json.parse(jsonHumans)
+        let tmp_humans = Json.parse(jsonHumans)
+
+        tmp_humans:each(|hash|{
+            humans:add(
+                human():id(hash:get("id"))
+                    :firstName(hash:get("firstName"))
+                    :lastName(hash:get("lastName"))
+            )
+        })
+
         println("Data loaded.")
         
     } catch(e) {
