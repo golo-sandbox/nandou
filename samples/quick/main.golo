@@ -9,8 +9,8 @@ import nandou.Future
 
 struct human = { id, firstName, lastName }
 
-function main = |args| {
 
+function main = |args| {
 
     let public = currentWorkingDirectory() + "/samples/quick/public"
 
@@ -52,7 +52,6 @@ function main = |args| {
     #]
 
 
-
     let httpServer = http():server(|httpExchange|{
 
         # Home page : index.html
@@ -80,7 +79,7 @@ function main = |args| {
                 """:fitin("humans", humans)
             )
         }) 
-
+   
         # Templating
         httpExchange:GET("/all/humans", |req, res|{
             res:renderView(
