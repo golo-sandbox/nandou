@@ -4,19 +4,53 @@ import nandou.Http
 import nandou.File
 import nandou.Json
 import nandou.String
+import nandou.Future
 
 
 struct human = { id, firstName, lastName }
 
+
 function main = |args| {
 
-    let humans = list[
-        human():id("001"):firstName("Bob"):lastName("Morane"),
-        human():id("002"):firstName("John"):lastName("Doe"),
-        human():id("003"):firstName("Jane"):lastName("Doe")
-    ]
-
     let public = currentWorkingDirectory() + "/samples/quick/public"
+
+    var humans = list[]
+
+    # Load data if exist
+    println("Loading data ...")
+    try {
+        let jsonHumans = fileToText(currentWorkingDirectory() + "/" + "humans.json", "UTF-8")
+        humans = Json.parse(jsonHumans)
+        println("Data loaded.")
+        
+    } catch(e) {
+        println("humans.json doesn't exist!")
+    }
+
+    # Save data
+    println("Scheduling saving ...")
+    # Save project each 20 seconds after previous save
+    let scheduler = getScheduler()
+
+    scheduler:getScheduleFutureWithFixedDelay(
+        futureArgs():command(|humans| {
+            try {
+                textToFile(Json.stringify(humans), currentWorkingDirectory() + "/" + "humans.json")
+            } catch(e) {
+                println("error : " + e:toString())
+            }
+        })
+        :message(humans)
+        :initialDelay(10_L) # first run after 10 seconds
+        :delay(20_L)        # then run it each 20 seconds
+    )
+
+    #let humans = list[
+    #    human():id("001"):firstName("Bob"):lastName("Morane"),
+    #    human():id("002"):firstName("John"):lastName("Doe"),
+    #    human():id("003"):firstName("Jane"):lastName("Doe")
+    #]
+
 
     let httpServer = http():server(|httpExchange|{
 
@@ -45,7 +79,7 @@ function main = |args| {
                 """:fitin("humans", humans)
             )
         }) 
-
+   
         # Templating
         httpExchange:GET("/all/humans", |req, res|{
             res:renderView(
