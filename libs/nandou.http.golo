@@ -260,32 +260,27 @@ augment nandou.Http.types.route {
         #to be refactored / rewritten
         let route = -> this:request():method() + ":" + this:request():uri()
 
-        if path:startsWith("r:") {
+        if path:endsWith(":var") {
 
-        } else {
-            if path:endsWith(":var") {
-
-                let start = verb + ":" + path:split(":var"):get(0)
-                let endOfUri = route():split(start)
-                if endOfUri:size() > 1 {
-                    if (start + endOfUri:get(1)):equals(route()) {
-                        return true
-                    } else {
-                        return false
-                    }
-                } else {
-                    return false
-                }
-
-            } else {
-                if route():equals(verb + ":" + path) or route():equals(verb + ":" + path + "/") {
+            let start = verb + ":" + path:split(":var"):get(0)
+            let endOfUri = route():split(start)
+            if endOfUri:size() > 1 {
+                if (start + endOfUri:get(1)):equals(route()) {
                     return true
                 } else {
                     return false
                 }
+            } else {
+                return false
+            }
+
+        } else {
+            if route():equals(verb + ":" + path) or route():equals(verb + ":" + path + "/") {
+                return true
+            } else {
+                return false
             }
         }
-
 
     }
 
@@ -319,7 +314,7 @@ augment nandou.Http.types.route {
 }
 
 augment com.sun.net.httpserver.HttpExchange {
-    #:request(this:request()):response(this:response())
+
     function route = |this| -> route():httpExchange(this):request(this:request()):response(this:response())
 
     function GET = |this, path, callback| {
