@@ -304,9 +304,13 @@ augment nandou.Http.types.route {
 
     function POST = |this, path, callback| {
 
-        let route = -> this:request():method() + ":" + this:request():uri()
+        #let route = -> this:request():method() + ":" + this:request():uri()
 
-        if route():equals("POST:" + path) or route():equals("POST:" + path + "/") {
+        #if route():equals("POST:" + path) or route():equals("POST:" + path + "/") {
+        #    callback(this:request(), this:response())
+        #}
+
+        if this:httpVerb(path, "POST") {
             callback(this:request(), this:response())
         }
     }
