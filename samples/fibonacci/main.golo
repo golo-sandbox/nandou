@@ -6,13 +6,6 @@ import nandou.Json
 import nandou.String
 import nandou.Future
 
-function fibonacci = |n| {
-  if n <= 1 {
-    return n
-  } else {
-    return fibonacci(n - 1) + fibonacci(n - 2)
-  }
-}
 
 function main = |args| {
 
@@ -28,12 +21,21 @@ function main = |args| {
 
             let callableFibonacciComputation = |iterations| {
 
-              let result = fibonacci(iterations)
-              println(">>> " + result)
+                let fibonacci = |n| {
+                    if n <= 1 {
+                        return n
+                    } else {
+                        return fibonacci(n - 1) + fibonacci(n - 2)
+                    }
+                }
 
-              memory:result(result)
 
-              #return result
+                let result = fibonacci(iterations)
+                println(">>> " + result)
+
+                memory:result(result)
+
+                #return result
             }
 
             let future = executor:getFuture(callableFibonacciComputation, 43)

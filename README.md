@@ -266,21 +266,22 @@ It's very easy to write a future with **Nandou**
 ```coffeescript
 import nandou.Future
 
-function fibonacci = |n| {
-  if n <= 1 {
-    return n
-  } else {
-    return fibonacci(n - 1) + fibonacci(n - 2)
-  }
-}
-
 function main = |args| {
 
     let executor = getExecutor() # you need an "executor"
 
     let callableFibonacciComputation = |iterations| {
-      let result = fibonacci(iterations)
-      println(">>> " + result)
+
+        let fibonacci = |n| {
+          if n <= 1 {
+            return n
+          } else {
+            return fibonacci(n - 1) + fibonacci(n - 2)
+          }
+        }
+        
+        let result = fibonacci(iterations)
+        println(">>> " + result)
     }
 
     let future = executor:getFuture(callableFibonacciComputation, 43)
