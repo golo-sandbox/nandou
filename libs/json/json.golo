@@ -90,10 +90,14 @@ function JsonGrammar = -> grammar()
     :remarkDelimiter("#")
     :keyWords([])
 
-
 function parse = |jsonSource| {
     # Tokenize source code (with generic grammar of Champollion)
-    let lexer = Lexer():grammar(JsonGrammar()):source(jsonSource):tokenize()
+
+	let dealsWithQuotes = |s| { #tempory fix about quotes inside string
+	    return s:replaceAll("\\u005C\\u0022", "\\\\u0022")
+	}
+
+    let lexer = Lexer():grammar(JsonGrammar()):source(dealsWithQuotes(jsonSource)):tokenize()
 
     # Cleaning tokens for the parser
     let parser = Parser():tokens(

@@ -66,6 +66,8 @@ augment champollion.types.lexer {
 		} else { return "\\x00" }	# to be verified
 	}
 
+
+
 	# helper
 	function createToken = |this, type, value| {
         return Token(type, value, this:line())
@@ -212,6 +214,7 @@ augment champollion.types.lexer {
     }
 
     function isStringStart = |this, ch| {
+
         if this:isStringDelimiter(ch) {
         	if ((this:strStart() is false) or (this:strStart() is null)) {
         		this:strStart(true)
@@ -224,14 +227,21 @@ augment champollion.types.lexer {
 
     }
 
+
     function isStringEnd = |this, ch| { # mouais bof, à vérifier
+
         if this:isStringDelimiter(ch) {
-        	if this:strStart() is true {
-        		this:strStart(false)
-                return true
+        	
+            if this:strStart() is true {
+
+                this:strStart(false)
+                return true   
+
         	} else {
-        		this:strStart(true)
-                return false
+
+                this:strStart(true)
+                return false 
+
         	}
         	#return (not this:strStart())
         } else { return false }
@@ -294,7 +304,7 @@ augment champollion.types.lexer {
 
     }
 
-    function isRemarkEnd = |this, ch| { # mouais bof, à vérifier
+    function isRemarkEnd = |this, ch| { 
         if this:isRemarkDelimiter(ch) {
         	if this:remStart() is true {
         		this:remStart(false)

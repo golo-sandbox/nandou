@@ -23,6 +23,9 @@ function main = |args| {
         let tmp_humans = Json.parse(jsonHumans)
 
         tmp_humans:each(|hash|{
+
+            println(hash)
+
             humans:add(
                 human():id(hash:get("id"))
                     :firstName(hash:get("firstName"))
@@ -82,7 +85,7 @@ function main = |args| {
                 <hr>
                 <% foreach human in humans { %>
                     <p>
-                        <%= human:firstName() %> <%= human:lastName() %> <%= human:id() %>
+                        <%= human:firstName() %> <%= human:lastName() %> "<%= human:id() %>"
                     </p>
                 <% } %>
                 """:fitin("humans", humans)
@@ -147,7 +150,10 @@ function main = |args| {
         
         httpExchange:POST("/humans", |req, res|{
 
+
             println("=== SIMPLE POST ====")
+
+            println(req:data())
 
             let humanMap = Json.parse(req:data()) # it's a map
             humanMap:put("id",java.util.UUID.randomUUID():toString())
